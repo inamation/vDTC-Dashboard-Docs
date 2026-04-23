@@ -50,3 +50,47 @@
   * [MillenniumBlend](projects/emerging/millennium-blend.md)
   * [AortaPoint](projects/emerging/aortapoint.md)
   * [WavePod](projects/emerging/wavepod.md)
+
+## Extended Portfolio
+
+* [Extended Portfolio Overview](projects/extended/README.md)
+
+### Emergency Response Extensions
+
+  * [911Corps](projects/extended/911-corps.md)
+  * [VitalsOne](projects/extended/vitals-one.md)
+  * [Xpod — Field X-Ray](projects/extended/xpod.md)
+  * [911TriageResponseBus](projects/extended/911-triage-response-bus.md)
+  * [911SchoolBUS](projects/extended/911-school-bus.md)
+  * [911MEZ-LIFT](projects/extended/911-mez-lift.md)
+  * [911ERsuite](projects/extended/911-er-suite.md)
+  * [DeltaEMT Capsule Drone](projects/extended/delta-emt-drone.md)
+  * [CryoCommand](projects/extended/cryo-command.md)
+  * [911InformaticsKioskAuto](projects/extended/911-kiosk-auto.md)
+  * [911InformaticsKioskHome](projects/extended/911-kiosk-home.md)
+  * [911EmergencyInjectablesPack](projects/extended/911-injectables.md)
+  * [LOTObuddyCAM](projects/extended/loto-buddy-cam.md)
+  * [JOBSITE911](projects/extended/jobsite-911.md)
+  * [911EscapeMask](projects/extended/911-escape-mask.md)
+  * [911AirDrop](projects/extended/911-airdrop.md)
+  * [911HealthData](projects/extended/911-health-data.md)
+  * [911Phone](projects/extended/911-phone.md)
+  * [GyroScopicSurgery](projects/extended/gyroscopic-surgery.md)
+  * [911Pets](projects/extended/911-pets.md)
+
+### Consumer & Energy
+
+  * [ANODE+](projects/extended/anode-plus.md)
+  * [AireCabineSignature](projects/extended/aire-cabine.md)
+  * [EchelonOne](projects/extended/echelon-one.md)
+
+### Medical Devices
+
+  * [BioCore](projects/extended/biocore.md)
+
+### Platform & Development
+
+  * [HVF Phase 2 Controls](projects/extended/hvf-phase2.md)
+  * [Android Edge Development](projects/extended/android-edge.md)
+  * [Pi 5 Edge Development](projects/extended/pi5-edge.md)
+  * [MDN Initiatives](projects/extended/mdn-initiatives.md)
