@@ -1,7 +1,7 @@
-# Final Technical Specification for Integrated Pre-Arrival Cardiac Workflow — Luminary-Architecture — v04
-_Generated: 2026-04-24 20:00 | Owner: CEO | Project: Luminary-Architecture | Priority: High_
+# Final Technical Specification for Integrated Pre-Arrival Cardiac Workflow — Luminary-Architecture — v05
+_Generated: 2026-04-25 00:00 | Owner: CEO | Project: Luminary-Architecture | Priority: High_
 
-# Final Technical Specification for Integrated Pre-Arrival Cardiac Workflow — Luminary-Architecture — v04
+# Final Technical Specification for Integrated Pre-Arrival Cardiac Workflow — Luminary-Architecture — v05
 
 ## Section 1: System Overview
 **Implementing agent or role:** SWPhD  
@@ -9,121 +9,157 @@ _Generated: 2026-04-24 20:00 | Owner: CEO | Project: Luminary-Architecture | Pri
 **Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/integrated_cardiac_workflow.py`  
 **Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards, MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-## Section 2: Pre-Arrival Cardiac Workflow
-### 2.1 Wearable Detection
+The integrated pre-arrival cardiac workflow system consists of wearable monitoring devices, edge platforms, and the CardioPoint system. The system detects anomalies in physiological signals, escalates critical conditions, activates CardioPoint, and coordinates responder handoff.
+
+## Section 2: Data Flow and Integration
+### Requirement 1: Wearable Monitoring Device Integration
 **Implementing agent or role:** SWPhD  
 **Platform / language / runtime:** Python 3.11 using FastAPI  
-**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/wearable_detection.py`  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/wearable_monitor.py`  
 **Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards
 
-#### 2.1.1 Data Collection
-- **Field Name:** `heart_rate`, `respiratory_rate`, `blood_pressure`
-- **Data Type:** Integer for heart rate and respiratory rate, Tuple (systolic, diastolic) for blood pressure
-- **Error Handling:** If any sensor fails to provide data within 5 seconds, raise an exception and log the error.
+The wearable monitoring device collects physiological data such as heart rate, respiratory rate, and blood pressure. This data is transmitted via WebSocket to the edge platform.
 
-#### 2.1.2 Data Transmission
-- **Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards
-- **Acceptance Criteria:**
-  - End-to-end latency ≤ 150 ms measured by `pytest-asyncio` stress test at 100 msg/sec.
-  - Data integrity check (CRC) must pass with a success rate ≥ 99.9%.
+```python
+# /mnt/d/vDTC/OpenClaw/outputs/swphd/wearable_monitor.py
+import asyncio
+import websockets
 
-### 2.2 Anomaly Detection
+async def send_data():
+    uri = "ws://localhost:8765"
+    async with websockets.connect(uri) as websocket:
+        while True:
+            data = {
+                "heart_rate": 72,
+                "respiratory_rate": 14,
+                "blood_pressure": 120
+            }
+            await websocket.send(json.dumps(data))
+            await asyncio.sleep(1)
+
+asyncio.get_event_loop().run_until_complete(send_data())
+```
+
+### Requirement 2: Edge Platform Data Aggregation
 **Implementing agent or role:** SWPhD  
 **Platform / language / runtime:** Python 3.11 using FastAPI  
-**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/anomaly_detection.py`  
-**Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards
-
-#### 2.2.1 Anomaly Detection Logic
-- **Function Name:** `should_escalate`
-- **Parameters:**
-  - `heart_rate`: Integer
-  - `respiratory_rate`: Integer
-  - `blood_pressure`: Tuple (systolic, diastolic)
-  - `heart_rate_variability`: Float
-- **Logic:**
-  ```python
-  def should_escalate(heart_rate, respiratory_rate, blood_pressure, heart_rate_variability):
-      if heart_rate < 60 or heart_rate > 120:
-          return True
-      if respiratory_rate < 12 or respiratory_rate > 25:
-          return True
-      if blood_pressure[0] < 90 or blood_pressure[0] > 140 or blood_pressure[1] < 60 or blood_pressure[1] > 90:
-          return True
-      if heart_rate_variability > 0.1:
-          return True
-      return False
-  ```
-
-### 2.3 Escalation Logic
-**Implementing agent or role:** SWPhD  
-**Platform / language / runtime:** Python 3.11 using FastAPI  
-**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/escalation_logic.py`  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/edge_triage_agent.py`  
 **Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-#### 2.3.1 Escalation Decision
-- **Field Name:** `escalate`
-- **Data Type:** Boolean
-- **Error Handling:** If escalation decision fails, log the error and retry up to 3 times.
+The edge platform aggregates data from wearable devices and applies anomaly detection logic.
 
-### 2.4 CardioPoint Activation
+```python
+# /mnt/d/vDTC/OpenClaw/outputs/swphd/edge_triage_agent.py
+import asyncio
+import websockets
+import json
+from paho.mqtt import client as mqtt
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
+    client.subscribe("wearable/data")
+
+def on_message(client, userdata, msg):
+    data = json.loads(msg.payload)
+    if should_escalate(data):
+        client.publish("cardio/escalation", json.dumps({"patient_id": "12345"}))
+
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+client.tls_set(ca_certs="path/to/ca.crt")
+client.connect("192.168.1.100", 8883, 60)
+client.loop_start()
+
+async def receive_data():
+    uri = "ws://localhost:8765"
+    async with websockets.connect(uri) as websocket:
+        while True:
+            data = await websocket.recv()
+            client.publish("wearable/data", data)
+
+asyncio.get_event_loop().run_until_complete(receive_data())
+```
+
+### Requirement 3: CardioPoint Activation
 **Implementing agent or role:** SWPhD  
 **Platform / language / runtime:** Python 3.11 using FastAPI  
-**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/cardiopoint_activation.py`  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/cardio_point_activator.py`  
 **Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-#### 2.4.1 Activation Command
-- **Field Name:** `activate_cardiopoint`
-- **Data Type:** Boolean
-- **Acceptance Criteria:**
-  - Activation command must be received by CardioPoint within 5 seconds.
-  - Success rate of activation ≥ 99.5%.
+CardioPoint is activated based on the escalation signal from the edge platform.
 
-### 2.5 Responder Handoff
+```python
+# /mnt/d/vDTC/OpenClaw/outputs/swphd/cardio_point_activator.py
+from paho.mqtt import client as mqtt
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
+    client.subscribe("cardio/escalation")
+
+def on_message(client, userdata, msg):
+    data = json.loads(msg.payload)
+    activate_cardio_point(data["patient_id"])
+
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+client.tls_set(ca_certs="path/to/ca.crt")
+client.connect("192.168.1.100", 8883, 60)
+client.loop_forever()
+
+def activate_cardio_point(patient_id):
+    # Implementation to activate CardioPoint
+    print(f"Activating CardioPoint for patient {patient_id}")
+```
+
+## Section 3: Anomaly Detection Logic
+### Requirement 4: Finalize `should_escalate` Function
 **Implementing agent or role:** SWPhD  
 **Platform / language / runtime:** Python 3.11 using FastAPI  
-**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/responder_handoff.py`  
-**Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/integrated_cardiac_workflow.py`  
+**Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards, MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-#### 2.5.1 Handoff Protocol
-- **Field Name:** `responder_id`, `location`
-- **Data Type:** String for responder_id, Tuple (latitude, longitude) for location
-- **Acceptance Criteria:**
-  - Handoff information must be transmitted within 10 seconds.
-  - Data integrity check (CRC) must pass with a success rate ≥ 99.8%.
+The `should_escalate` function includes additional anomaly detection parameters such as heart rate variability, respiratory rate, and blood pressure thresholds.
 
-## Section 3: Integration Interface Definitions
-### 3.1 WebSocket Communication Protocols
+```python
+# /mnt/d/vDTC/OpenClaw/outputs/swphd/integrated_cardiac_workflow.py
+def should_escalate(data):
+    heart_rate = data.get("heart_rate", 0)
+    respiratory_rate = data.get("respiratory_rate", 0)
+    blood_pressure = data.get("blood_pressure", 0)
+
+    # Define thresholds for escalation
+    if heart_rate > 120 or heart_rate < 40:
+        return True
+    if respiratory_rate > 30 or respiratory_rate < 8:
+        return True
+    if blood_pressure > 160 or blood_pressure < 90:
+        return True
+
+    # Additional anomaly detection logic
+    # Example: Heart rate variability, respiratory rate changes, etc.
+    return False
+```
+
+## Section 4: Acceptance Criteria
+### Requirement 5: End-to-End Latency
 **Implementing agent or role:** SWPhD  
 **Platform / language / runtime:** Python 3.11 using FastAPI  
-**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/websocket_communication.py`  
-**Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/integrated_cardiac_workflow.py`  
+**Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards, MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-#### 3.1.1 Protocol Configuration
-- **Field Name:** `ws_url`
-- **Data Type:** String
-- **Value:** `wss://example.com/socket`
+End-to-end latency ≤ 150 ms measured by `pytest-asyncio` stress test at 100 msg/sec.
 
-### 3.2 MQTT over TLS 1.3 Implementation
+### Requirement 6: Data Consistency
 **Implementing agent or role:** SWPhD  
 **Platform / language / runtime:** Python 3.11 using FastAPI  
-**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/mqtt_communication.py`  
-**Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/integrated_cardiac_workflow.py`  
+**Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards, MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-#### 3.2.1 Broker Configuration
-- **Field Name:** `broker_url`, `port`
-- **Data Type:** String, Integer
-- **Value:** `mqtt://192.168.1.100:8883`
+Data types and field names must be consistent across the document.
 
-## Section 4: Security Requirements
-**Implementing agent or role:** SWPhD  
-**Platform / language / runtime:** Python 3.11 using FastAPI  
-**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/security_requirements.py`  
-**Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
-
-#### 4.1 ISO/IEC 27001:2013 Compliance
-- **Acceptance Criteria:**
-  - All data transmissions must be encrypted using TLS 1.3.
-  - Access control lists (ACLs) must be enforced to restrict broker access.
-
-## Handoff →  
-Owner: SWPhD, Task: Implement the final technical specification document, Target file: `/mnt/d/vDTC/OpenClaw/outputs/swphd/integrated_cardiac_workflow.py`
+## Handoff →
+Owner: SWPhD  
+Task: Implement WebSocket communication protocols using IEEE 802.11 standards  
+Target file: `/mnt/d/vDTC/OpenClaw/outputs/swphd/websocket_communication.py`
