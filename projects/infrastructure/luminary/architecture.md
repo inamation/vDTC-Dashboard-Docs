@@ -1,123 +1,129 @@
-# Detailed Technical Specification — Luminary-Architecture — v03 Deepening
-_Generated: 2026-04-24 14:00 | Owner: CEO | Project: Luminary-Architecture | Priority: High_
+# Final Technical Specification for Integrated Pre-Arrival Cardiac Workflow — Luminary-Architecture — v04
+_Generated: 2026-04-24 20:00 | Owner: CEO | Project: Luminary-Architecture | Priority: High_
 
-# Detailed Technical Specification — Luminary-Architecture — v03 Deepening
+# Final Technical Specification for Integrated Pre-Arrival Cardiac Workflow — Luminary-Architecture — v04
 
-## Section 1: Anomaly Detection Subsystem
+## Section 1: System Overview
+**Implementing agent or role:** SWPhD  
+**Platform / language / runtime:** Python 3.11 using FastAPI  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/integrated_cardiac_workflow.py`  
+**Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards, MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-### WHO: SWPhD implements in Python 3.11 using FastAPI  
-### WHAT: Define specific numerical parameters, named standards, and decision logic for the Anomaly Detection subsystem.  
-### WHERE: `/mnt/d/vDTC/OpenClaw/outputs/swphd/anomaly_detection_subsystem.py`  
-### HOW: Implement a machine learning model with real-time anomaly detection capabilities.
+## Section 2: Pre-Arrival Cardiac Workflow
+### 2.1 Wearable Detection
+**Implementing agent or role:** SWPhD  
+**Platform / language / runtime:** Python 3.11 using FastAPI  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/wearable_detection.py`  
+**Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards
 
-```python
-# /mnt/d/vDTC/OpenClaw/outputs/swphd/anomaly_detection_subsystem.py
+#### 2.1.1 Data Collection
+- **Field Name:** `heart_rate`, `respiratory_rate`, `blood_pressure`
+- **Data Type:** Integer for heart rate and respiratory rate, Tuple (systolic, diastolic) for blood pressure
+- **Error Handling:** If any sensor fails to provide data within 5 seconds, raise an exception and log the error.
 
-from fastapi import FastAPI, HTTPException
-import numpy as np
-from sklearn.ensemble import IsolationForest
+#### 2.1.2 Data Transmission
+- **Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards
+- **Acceptance Criteria:**
+  - End-to-end latency ≤ 150 ms measured by `pytest-asyncio` stress test at 100 msg/sec.
+  - Data integrity check (CRC) must pass with a success rate ≥ 99.9%.
 
-app = FastAPI()
+### 2.2 Anomaly Detection
+**Implementing agent or role:** SWPhD  
+**Platform / language / runtime:** Python 3.11 using FastAPI  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/anomaly_detection.py`  
+**Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards
 
-# Load pre-trained model
-model = IsolationForest(contamination=0.1)
+#### 2.2.1 Anomaly Detection Logic
+- **Function Name:** `should_escalate`
+- **Parameters:**
+  - `heart_rate`: Integer
+  - `respiratory_rate`: Integer
+  - `blood_pressure`: Tuple (systolic, diastolic)
+  - `heart_rate_variability`: Float
+- **Logic:**
+  ```python
+  def should_escalate(heart_rate, respiratory_rate, blood_pressure, heart_rate_variability):
+      if heart_rate < 60 or heart_rate > 120:
+          return True
+      if respiratory_rate < 12 or respiratory_rate > 25:
+          return True
+      if blood_pressure[0] < 90 or blood_pressure[0] > 140 or blood_pressure[1] < 60 or blood_pressure[1] > 90:
+          return True
+      if heart_rate_variability > 0.1:
+          return True
+      return False
+  ```
 
-@app.post("/detect_anomalies/")
-async def detect_anomalies(data: list[float]):
-    if not data:
-        raise HTTPException(status_code=400, detail="No data provided")
-    
-    # Convert input data to numpy array
-    X = np.array(data).reshape(-1, 1)
-    
-    # Predict anomalies
-    predictions = model.predict(X)
-    
-    # Return results
-    return {"anomalies": (predictions == -1).tolist()}
-```
+### 2.3 Escalation Logic
+**Implementing agent or role:** SWPhD  
+**Platform / language / runtime:** Python 3.11 using FastAPI  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/escalation_logic.py`  
+**Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-### Acceptance Criteria:
-- **Latency**: End-to-end latency ≤ 50 ms measured by `pytest-asyncio` stress test at 20 msg/sec.
-- **Accuracy**: Detection accuracy ≥ 95% as validated by a benchmark dataset.
+#### 2.3.1 Escalation Decision
+- **Field Name:** `escalate`
+- **Data Type:** Boolean
+- **Error Handling:** If escalation decision fails, log the error and retry up to 3 times.
 
----
+### 2.4 CardioPoint Activation
+**Implementing agent or role:** SWPhD  
+**Platform / language / runtime:** Python 3.11 using FastAPI  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/cardiopoint_activation.py`  
+**Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-## Section 2: CardioPoint Integration with NeuroSeal
+#### 2.4.1 Activation Command
+- **Field Name:** `activate_cardiopoint`
+- **Data Type:** Boolean
+- **Acceptance Criteria:**
+  - Activation command must be received by CardioPoint within 5 seconds.
+  - Success rate of activation ≥ 99.5%.
 
-### WHO: SWPhD implements in Python 3.11 using FastAPI  
-### WHAT: Define specific numerical parameters, named standards, and decision logic for the integration between CardioPoint and NeuroSeal.  
-### WHERE: `/mnt/d/vDTC/OpenClaw/outputs/swphd/cardiopoint_neuroseal_integration.py`  
-### HOW: Implement a RESTful API to facilitate data exchange between CardioPoint and NeuroSeal.
+### 2.5 Responder Handoff
+**Implementing agent or role:** SWPhD  
+**Platform / language / runtime:** Python 3.11 using FastAPI  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/responder_handoff.py`  
+**Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-```python
-# /mnt/d/vDTC/OpenClaw/outputs/swphd/cardiopoint_neuroseal_integration.py
+#### 2.5.1 Handoff Protocol
+- **Field Name:** `responder_id`, `location`
+- **Data Type:** String for responder_id, Tuple (latitude, longitude) for location
+- **Acceptance Criteria:**
+  - Handoff information must be transmitted within 10 seconds.
+  - Data integrity check (CRC) must pass with a success rate ≥ 99.8%.
 
-from fastapi import FastAPI, HTTPException
-import requests
+## Section 3: Integration Interface Definitions
+### 3.1 WebSocket Communication Protocols
+**Implementing agent or role:** SWPhD  
+**Platform / language / runtime:** Python 3.11 using FastAPI  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/websocket_communication.py`  
+**Interface / protocol:** WebSocket communication protocols using IEEE 802.11 standards
 
-app = FastAPI()
+#### 3.1.1 Protocol Configuration
+- **Field Name:** `ws_url`
+- **Data Type:** String
+- **Value:** `wss://example.com/socket`
 
-@app.post("/send_data_to_neuroseal/")
-async def send_data_to_neuroseal(data: dict):
-    if not data:
-        raise HTTPException(status_code=400, detail="No data provided")
-    
-    # Define NeuroSeal API endpoint
-    neuroseal_url = "https://neuroseal.example.com/api/data"
-    
-    # Send data to NeuroSeal
-    response = requests.post(neuroseal_url, json=data)
-    
-    if response.status_code != 200:
-        raise HTTPException(status_code=500, detail="Failed to send data to NeuroSeal")
-    
-    return {"status": "success"}
-```
+### 3.2 MQTT over TLS 1.3 Implementation
+**Implementing agent or role:** SWPhD  
+**Platform / language / runtime:** Python 3.11 using FastAPI  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/mqtt_communication.py`  
+**Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-### Acceptance Criteria:
-- **Latency**: End-to-end latency ≤ 100 ms measured by `pytest-asyncio` stress test at 10 msg/sec.
-- **Data Integrity**: Data integrity ≥ 99% as validated by checksum verification.
+#### 3.2.1 Broker Configuration
+- **Field Name:** `broker_url`, `port`
+- **Data Type:** String, Integer
+- **Value:** `mqtt://192.168.1.100:8883`
 
----
+## Section 4: Security Requirements
+**Implementing agent or role:** SWPhD  
+**Platform / language / runtime:** Python 3.11 using FastAPI  
+**Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/security_requirements.py`  
+**Interface / protocol:** MQTT over TLS 1.3 to broker at 192.168.1.100:8883
 
-## Section 3: Edge Platforms API Standardization
-
-### WHO: SWPhD implements in Python 3.11 using FastAPI  
-### WHAT: Define specific numerical parameters, named standards, and decision logic for the Edge Platforms API standardization.  
-### WHERE: `/mnt/d/vDTC/OpenClaw/outputs/swphd/edge_platforms_api_standardization.py`  
-### HOW: Implement a RESTful API to facilitate data exchange between Edge Platforms and other systems.
-
-```python
-# /mnt/d/vDTC/OpenClaw/outputs/swphd/edge_platforms_api_standardization.py
-
-from fastapi import FastAPI, HTTPException
-import requests
-
-app = FastAPI()
-
-@app.post("/send_data_to_system/")
-async def send_data_to_system(data: dict):
-    if not data:
-        raise HTTPException(status_code=400, detail="No data provided")
-    
-    # Define target system API endpoint
-    target_url = "https://targetsystem.example.com/api/data"
-    
-    # Send data to target system
-    response = requests.post(target_url, json=data)
-    
-    if response.status_code != 200:
-        raise HTTPException(status_code=500, detail="Failed to send data to target system")
-    
-    return {"status": "success"}
-```
-
-### Acceptance Criteria:
-- **Latency**: End-to-end latency ≤ 150 ms measured by `pytest-asyncio` stress test at 5 msg/sec.
-- **Data Integrity**: Data integrity ≥ 98% as validated by checksum verification.
-
----
+#### 4.1 ISO/IEC 27001:2013 Compliance
+- **Acceptance Criteria:**
+  - All data transmissions must be encrypted using TLS 1.3.
+  - Access control lists (ACLs) must be enforced to restrict broker access.
 
 ## Handoff →  
-Owner: SWPhD, Task: Implement detailed technical specification for WavePod enhancement roadmap, Target file: `/mnt/d/vDTC/OpenClaw/outputs/swphd/wavepod_enhancement_roadmap.py`
+Owner: SWPhD, Task: Implement the final technical specification document, Target file: `/mnt/d/vDTC/OpenClaw/outputs/swphd/integrated_cardiac_workflow.py`

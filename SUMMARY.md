@@ -4,6 +4,8 @@
 * [Design Team Collaboration](design-collaboration.md)
 
 ## 911 Ecosystem
+  * [Final Report 911 Ecosystem 2026 04 24 V04](projects/911-ecosystem/FINAL_REPORT_911_ecosystem_2026-04-24_v04.md)
+
   * [Final Report 911 Ecosystem 2026 04 24 V03](projects/911-ecosystem/FINAL_REPORT_911_ecosystem_2026-04-24_v03.md)
 
   * [Final Report 911 Hub 2026 04 24](projects/911-ecosystem/FINAL_REPORT_911_hub_2026-04-24.md)
@@ -22,6 +24,10 @@
   * [Investment Details](projects/911-ecosystem/investment.md)
 
 ## Medical & Clinical
+  * [Final Report Cardiopoint 2026 04 24 V04](projects/cardiopoint/FINAL_REPORT_cardiopoint_2026-04-24_v04.md)
+
+  * [Final Report Purple Patch Active Bandage Platform 2026 04 24 V04](projects/purple-patch/FINAL_REPORT_purple_patch_active_bandage_platform_2026-04-24_v04.md)
+
   * [Final Report Neuroseal 2026 04 24 V03](projects/neuroseal/FINAL_REPORT_neuroseal_2026-04-24_v03.md)
 
   * [Final Report Cardiopoint 2026 04 24 V03](projects/cardiopoint/FINAL_REPORT_cardiopoint_2026-04-24_v03.md)
@@ -43,6 +49,8 @@
   * [Investment Details](projects/purple-patch/investment.md)
 
 ## Infrastructure
+  * [Final Report Ironshield 2026 04 24 V04](projects/infrastructure/ironshield/FINAL_REPORT_ironshield_2026-04-24_v04.md)
+
   * [Final Report Ironshield Smr 2026 04 24 V03](projects/infrastructure/ironshield/FINAL_REPORT_ironshield_smr_2026-04-24_v03.md)
 
   * [Final Report Midlink Icc 2026 04 24 V02](projects/infrastructure/midlink-icc/FINAL_REPORT_midlink_icc_2026-04-24_v02.md)
