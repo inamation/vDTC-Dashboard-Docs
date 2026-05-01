@@ -1,111 +1,77 @@
-# Final Report Consolidation — Luminary-Architecture — v02 Deepening
-_Generated: 2026-04-25 12:00 | Owner: CEO | Project: Luminary-Architecture | Priority: High_
+# Detailed Technical Specification for Integrated Pre-Arrival Cardiac Workflow — Luminary-Architecture — v04
+_Generated: 2026-04-26 00:00 | Owner: CEO | Project: Luminary-Architecture | Priority: High_
 
-# Final Report Consolidation — Luminary-Architecture — v02 Deepening
+# Detailed Technical Specification for Integrated Pre-Arrival Cardiac Workflow — Luminary-Architecture — v04
 
-## Section 1: Integrated Pre-Arrival Cardiac Workflow
+## Section 1: System Overview
+- **Implementing agent or role:** SYSTEMARCH
+- **Platform / language / runtime:** N/A (Architecture-level specification)
+- **Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/luminary_architecture/integrated_pre_arrival_cardiac_workflow_v04.md`
+- **Interface / protocol:** N/A
 
-### WHO: SWPhD  
-**WHAT:** Implement integrated pre-arrival cardiac workflow  
-**WHERE:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/integrated_cardiac_workflow.py`  
-**HOW:** Use Python 3.11 with FastAPI for API handling and MQTT over TLS 1.3 to broker at 192.168.1.100:8883
+## Section 2: Cardiac Arrest Detection Subsystem
+### Requirement 1: Wearable Monitoring Integration
+- **Implementing agent or role:** SWPhD implements in Python 3.11 using FastAPI
+- **Platform / language / runtime:** Python 3.11, FastAPI
+- **Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/wearable_monitoring_integration.py`
+- **Interface / protocol:** MQTT over TLS 1.3 to broker at `cardio.broker.io:8883`
 
-```python
-# integrated_cardiac_workflow.py
-from fastapi import FastAPI, HTTPException
-import paho.mqtt.client as mqtt
+**Acceptance Criteria:**
+1. End-to-end latency ≤ 150 ms measured by `pytest-asyncio` stress test at 100 msg/sec.
+2. Data integrity ≥ 99.9% as verified by checksum validation.
 
-app = FastAPI()
+### Requirement 2: Anomaly Detection
+- **Implementing agent or role:** AIEng implements in TensorFlow 2.13 using Python 3.11
+- **Platform / language / runtime:** TensorFlow 2.13, Python 3.11
+- **Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/aieng/anomaly_detection_model.h5`
+- **Interface / protocol:** REST API on `http://localhost:8080/api/detect`
 
-def on_connect(client, userdata, flags, rc):
-    client.subscribe("cardio/monitoring")
+**Acceptance Criteria:**
+1. Detection accuracy ≥ 98% as verified by AUC-ROC curve.
+2. False positive rate ≤ 1% as verified by clinical validation.
 
-def on_message(client, userdata, msg):
-    data = json.loads(msg.payload)
-    if detect_cardiac_arrest(data):
-        escalate_to_cardiopoint(data)
+### Requirement 3: Escalation Logic
+- **Implementing agent or role:** SWPhD implements in Python 3.11 using FastAPI
+- **Platform / language / runtime:** Python 3.11, FastAPI
+- **Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/swphd/escalation_logic.py`
+- **Interface / protocol:** MQTT over TLS 1.3 to broker at `cardio.broker.io:8883`
 
-client = mqtt.Client()
-client.on_connect = on_connect
-client.on_message = on_message
-client.connect("192.168.1.100", 8883, 60)
-client.loop_start()
+**Acceptance Criteria:**
+1. Response time ≤ 50 ms measured by latency test.
+2. Correct escalation rate ≥ 95% as verified by clinical validation.
 
-@app.post("/cardio/monitoring")
-async def handle_cardio_data(data: dict):
-    if detect_cardiac_arrest(data):
-        escalate_to_cardiopoint(data)
-        return {"status": "escalated"}
-    else:
-        return {"status": "normal"}
+## Section 3: CardioPoint Activation
+### Requirement 4: CardioPoint Integration
+- **Implementing agent or role:** SYSTEMARCH implements in Python 3.11 using FastAPI
+- **Platform / language / runtime:** Python 3.11, FastAPI
+- **Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/systemarch/cardio_point_integration.py`
+- **Interface / protocol:** REST API on `http://localhost:8080/api/cardio`
 
-def detect_cardiac_arrest(data: dict) -> bool:
-    # Implement cardiac arrest detection logic
-    pass
+**Acceptance Criteria:**
+1. Activation success rate ≥ 99% as verified by clinical validation.
+2. Response time ≤ 100 ms measured by latency test.
 
-def escalate_to_cardiopoint(data: dict):
-    # Implement escalation to CardioPoint logic
-    pass
-```
+## Section 4: Responder Handoff
+### Requirement 5: Triage Coordination Layer
+- **Implementing agent or role:** SYSTEMARCH implements in Python 3.11 using FastAPI
+- **Platform / language / runtime:** Python 3.11, FastAPI
+- **Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/systemarch/triage_coordination_layer.py`
+- **Interface / protocol:** MQTT over TLS 1.3 to broker at `cardio.broker.io:8883`
 
-**Acceptance Criteria:**  
-- End-to-end latency ≤ 150 ms measured by `pytest-asyncio` stress test at 100 msg/sec.
+**Acceptance Criteria:**
+1. Handoff success rate ≥ 98% as verified by clinical validation.
+2. Response time ≤ 75 ms measured by latency test.
 
-> **Handoff →** Owner: IntegrationTeam, Task: Integrate with CardioPoint+NeuroSeal, Target file: `/mnt/d/vDTC/OpenClaw/outputs/integration_team/cardio_integration.py`
+## Section 5: Data Management
+### Requirement 6: Centralized Processing
+- **Implementing agent or role:** SYSTEMARCH implements in Python 3.11 using FastAPI
+- **Platform / language / runtime:** Python 3.11, FastAPI
+- **Output file or artifact:** `/mnt/d/vDTC/OpenClaw/outputs/systemarch/data_management.py`
+- **Interface / protocol:** REST API on `http://localhost:8080/api/data`
 
-## Section 2: Edge Platforms as Primary Triage Coordination Layer
+**Acceptance Criteria:**
+1. Data aggregation success rate ≥ 99% as verified by clinical validation.
+2. Response time ≤ 50 ms measured by latency test.
 
-### WHO: HWPhD  
-**WHAT:** Implement edge platforms for primary triage coordination  
-**WHERE:** `/mnt/d/vDTC/OpenClaw/outputs/hwphd/edge_triage_agent.py`  
-**HOW:** Use Android Edge with Kotlin and Pi 5 embedded computing tier with C++
-
-```kotlin
-// edge_triage_agent.kt
-import org.eclipse.paho.client.mqttv3.MqttClient
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions
-
-fun main() {
-    val client = MqttClient("tcp://192.168.1.100:1883", "EdgeTriageAgent")
-    val options = MqttConnectOptions()
-    client.connect(options)
-    client.subscribe("triage/coordination")
-
-    // Implement triage coordination logic
-}
-```
-
-**Acceptance Criteria:**  
-- Data aggregation accuracy ≥ 95% measured by `pytest` unit tests.
-
-> **Handoff →** Owner: SWPhD, Task: Develop API standardization for integration, Target file: `/mnt/d/vDTC/OpenClaw/outputs/swphd/api_standardization.py`
-
-## Section 3: Consumer Market Sequencing Strategy
-
-### WHO: MarketOps  
-**WHAT:** Launch sequence strategy for consumer market  
-**WHERE:** `/mnt/d/vDTC/OpenClaw/outputs/marketops/consumer_launch_strategy.md`  
-**HOW:** Use Markdown with detailed launch plan and timeline
-
-```markdown
-# Consumer Launch Strategy
-
-## Niche Markets
-1. Medical professional gear
-2. Family preparedness kits
-3. Men's functional tactical gear
-
-## Timeline
-- Q1 2026: Launch medical professional gear
-- Q2 2026: Launch family preparedness kits
-- Q3 2026: Launch men's functional tactical gear
-```
-
-**Acceptance Criteria:**  
-- Market penetration ≥ 5% in niche markets within first quarter of launch.
-
-> **Handoff →** Owner: ProductTeam, Task: Develop product designs for niche markets, Target file: `/mnt/d/vDTC/OpenClaw/outputs/product_team/niche_market_designs.pdf`
-
----
-
-This specification includes all required components with clear implementation details, acceptance criteria, and handoff assignments.
+## Handoff →
+Owner: SWPhD, Task: Implement Wearable Monitoring Integration, Target file: `/mnt/d/vDTC/OpenClaw/outputs/swphd/wearable_monitoring_integration.py`
