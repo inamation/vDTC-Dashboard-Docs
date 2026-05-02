@@ -1,89 +1,136 @@
-# Detailed Cross-Domain Compliance Matrix and Interface Specification — Luminary-Architecture
-_Generated: 2026-05-02 04:00 | Owner: CompliancePhD | Project: Luminary-Architecture | Priority: High_
+# Detailed Compliance and Code Stack Specification — Luminary-Architecture — v04 Finalization
+_Generated: 2026-05-02 08:00 | Owner: CompliancePhD | Project: Luminary-Architecture | Priority: High_
 
-# Detailed Cross-Domain Compliance Matrix and Interface Specification — Luminary-Architecture
+## Detailed Compliance and Code Stack Specification — Luminary-Architecture — v04 Finalization
 
-## Section 1: Cross-Domain Compliance Matrix
+### Section 1: IBC Database Schema Definition
 
-### Product Line 1: CardioPoint
-- **Standard:** ISO 27001, NIST SP 800-53, SOC 2 Type II
-- **Compliance Details:**
-  - **ISO 27001:** Implement Information Security Management System (ISMS) to ensure data confidentiality, integrity, and availability.
-  - **NIST SP 800-53:** Adhere to security controls for protecting sensitive information, including encryption of data at rest and in transit.
-  - **SOC 2 Type II:** Conduct regular audits and assessments to maintain compliance with service organization control standards.
+#### WHO: SWPhD implements in Python 3.11 using FastAPI  
+#### WHAT: Complete the IBC database schema definition, including SQL DDL, table definitions, column types, constraints, and foreign keys to ensure full implementability.  
+#### WHERE: `/mnt/d/vDTC/OpenClaw/outputs/swphd/luminary_architecture_2026-05-02.sql`  
+#### HOW:
+```sql
+CREATE TABLE building (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    height_meters INTEGER NOT NULL,
+    occupancy INTEGER NOT NULL,
+    classification VARCHAR(100) CHECK (classification IN ('Low', 'Medium', 'High'))
+);
 
-### Product Line 2: Edge Platforms
-- **Standard:** IEC 62443, NIST SP 800-53, ISO/IEC 27034
-- **Compliance Details:**
-  - **IEC 62443:** Ensure secure communication and data exchange between edge devices and central systems.
-  - **NIST SP 800-53:** Implement security controls for protecting edge computing environments, including access control and monitoring.
-  - **ISO/IEC 27034:** Manage the lifecycle of cryptographic keys and ensure secure key management practices.
+CREATE TABLE compliance_record (
+    id SERIAL PRIMARY KEY,
+    building_id INTEGER REFERENCES building(id),
+    standard_name VARCHAR(255) NOT NULL,
+    compliance_status BOOLEAN NOT NULL,
+    last_checked TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-### Product Line 3: Purple Patch
-- **Standard:** ISO 13485, IEC 62304, FDA Quality System Regulation (QSR)
-- **Compliance Details:**
-  - **ISO 13485:** Establish a quality management system for medical devices.
-  - **IEC 62304:** Ensure the development of medical device software is compliant with safety and performance requirements.
-  - **FDA QSR:** Adhere to FDA regulations for medical device manufacturing, testing, and labeling.
+### Section 2: Expanded Cross-Domain Compliance Matrix
 
-### Product Line 4: WavePod
-- **Standard:** IEC 61508, ISO 26262, NIST SP 800-53
-- **Compliance Details:**
-  - **IEC 61508:** Ensure the safety of electronic systems in potentially hazardous environments.
-  - **ISO 26262:** Implement functional safety requirements for automotive-grade communication systems.
-  - **NIST SP 800-53:** Protect communication channels and ensure data integrity.
+#### WHO: CompliancePhD implements in Python 3.11 using FastAPI  
+#### WHAT: Expand the cross-domain compliance matrix for each product line by mapping all applicable standards (e.g., ISO 13485:2016, IEC 62304, 21 CFR Part 820, HIPAA) with comprehensive numerical parameters, tolerance bands, test conditions, measurement methods, and traceability to the named standard clauses.  
+#### WHERE: `/mnt/d/vDTC/OpenClaw/outputs/compliancephd/luminary_architecture_compliance_matrix_2026-05-02.json`  
+#### HOW:
+```json
+{
+    "products": [
+        {
+            "name": "CardioPoint",
+            "standards": [
+                {
+                    "standard_name": "ISO 13485:2016",
+                    "parameters": [
+                        {
+                            "parameter_name": "Accuracy",
+                            "tolerance_band": "±2%",
+                            "test_conditions": "Under normal operating conditions",
+                            "measurement_method": "Calibration against known standards",
+                            "traceability_clause": "Clause 7.5"
+                        }
+                    ]
+                },
+                {
+                    "standard_name": "IEC 62304",
+                    "parameters": [
+                        {
+                            "parameter_name": "Reliability",
+                            "tolerance_band": "≥99.9%",
+                            "test_conditions": "Over 1 year of continuous operation",
+                            "measurement_method": "Failure rate analysis",
+                            "traceability_clause": "Clause 7.2"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Purple Patch",
+            "standards": [
+                {
+                    "standard_name": "HIPAA",
+                    "parameters": [
+                        {
+                            "parameter_name": "Data Encryption",
+                            "tolerance_band": "AES-256",
+                            "test_conditions": "Data at rest and in transit",
+                            "measurement_method": "Penetration testing",
+                            "traceability_clause": "45 CFR §164.312"
+                        }
+                    ]
+                },
+                {
+                    "standard_name": "ISO 13485:2016",
+                    "parameters": [
+                        {
+                            "parameter_name": "Quality Management",
+                            "tolerance_band": "Compliance with all clauses",
+                            "test_conditions": "Internal audit and third-party review",
+                            "measurement_method": "Audit report analysis",
+                            "traceability_clause": "Clause 8.5"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
 
-## Section 2: Acceptance Test Plan
+### Section 3: Enhanced Integration Protocols
 
-### T02: Code Stack Deepening
-- **Test Method:** Unit tests using `pytest` with coverage ≥ 90%.
-- **Acceptance Criteria:** End-to-end latency ≤ 150 ms measured by `pytest-asyncio` stress test at 100 msg/sec.
+#### WHO: SWPhD implements in Python 3.11 using FastAPI  
+#### WHAT: Enhance integration protocols by adding retry/backoff policies, timeout thresholds (e.g., gRPC deadline ms), schema versioning strategies for `.proto` files, RabbitMQ dead-letter queue configurations, OAuth 2.0 token expiry values, and automated test harnesses responsible for validating protocol conformance at runtime.  
+#### WHERE: `/mnt/d/vDTC/OpenClaw/outputs/swphd/luminary_architecture_integration_protocols_2026-05-02.yaml`  
+#### HOW:
+```yaml
+retry_backoff_policy:
+  initial_delay_ms: 100
+  max_delay_ms: 1000
+  multiplier: 2
 
-### T03: Dependency Map
-- **Test Method:** Automated dependency analysis tool (e.g., `Dependabot`) with regular updates.
-- **Acceptance Criteria:** No critical vulnerabilities identified in dependencies, update frequency ≤ 1 week.
+timeout_thresholds:
+  gRPC_deadline_ms: 3000
 
-### T04: Data Center Design
-- **Test Method:** Physical security assessment and compliance audit.
-- **Acceptance Criteria:** Data center meets ISO/IEC 27001 standards for physical security controls.
+schema_versioning:
+  version_strategy: semantic_versioning
+  file_extension: .proto
 
-### T05: Network Integration
-- **Test Method:** Network performance testing using `iperf3` with real-time monitoring.
-- **Acceptance Criteria:** Network latency ≤ 20 ms, packet loss ≤ 0.1% under peak load conditions.
+rabbitmq_config:
+  dead_letter_queue_enabled: true
+  queue_name: luminary_architecture_dlq
 
-### T06: Edge Integration
-- **Test Method:** End-to-end integration tests using `pytest` and `docker-compose`.
-- **Acceptance Criteria:** Successful data exchange between edge devices and central systems with no data loss or corruption.
+oauth2_token_expiry:
+  expiry_value: 3600s
 
-## Section 3: Interface Control Document (ICD)
+automated_test_harnesses:
+  - name: gRPC_conformance_test
+    language: Python
+    test_script_path: /mnt/d/vDTC/OpenClaw/tests/grpc_conformance_test.py
+  - name: rabbitmq_dead_letter_queue_test
+    language: Bash
+    test_script_path: /mnt/d/vDTC/OpenClaw/tests/rabbitmq_dlq_test.sh
+```
 
-### Interface 1: CardioPoint to NeuroSeal
-- **Message Schema:** JSON format, version 1.0.
-- **Authentication Mechanism:** OAuth 2.0 with JWT tokens.
-- **Error Handling Contracts:** HTTP status codes 4xx for client errors and 5xx for server errors.
-- **Versioning:** Semantic versioning (e.g., v1.0.0).
-- **Frequency Details:** Polling interval ≤ 1 second.
-
-### Interface 2: Edge Platforms to CardioPoint
-- **Message Schema:** Protobuf format, version 2.0.
-- **Authentication Mechanism:** Mutual TLS with client certificates.
-- **Error Handling Contracts:** Custom error codes and messages.
-- **Versioning:** Semantic versioning (e.g., v2.0.0).
-- **Frequency Details:** Real-time data streaming.
-
-### Interface 3: Purple Patch to Edge Platforms
-- **Message Schema:** XML format, version 1.1.
-- **Authentication Mechanism:** API keys with rate limiting.
-- **Error Handling Contracts:** SOAP fault messages.
-- **Versioning:** Semantic versioning (e.g., v1.1.0).
-- **Frequency Details:** Event-driven communication.
-
-### Interface 4: WavePod to CardioPoint
-- **Message Schema:** JSON format, version 1.2.
-- **Authentication Mechanism:** Basic authentication with hashed passwords.
-- **Error Handling Contracts:** Custom error codes and messages.
-- **Versioning:** Semantic versioning (e.g., v1.2.0).
-- **Frequency Details:** Real-time data streaming.
-
-## Handoff →
-Owner: CompliancePhD, Task: Review and finalize compliance matrix and test plan, Target file: `/mnt/d/vDTC/OpenClaw/outputs/compliancephd/luminary_architecture_compliance_matrix_v1.md`
+### Handoff → Owner: SWPhD, Task: Implement IBC database schema and integration protocols, Target file: `/mnt/d/vDTC/OpenClaw/outputs/swphd/luminary_architecture_2026-05-02.sql`
