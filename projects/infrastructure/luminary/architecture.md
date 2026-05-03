@@ -1,136 +1,152 @@
-# Detailed Compliance and Code Stack Specification — Luminary-Architecture — v04 Finalization
-_Generated: 2026-05-02 08:00 | Owner: CompliancePhD | Project: Luminary-Architecture | Priority: High_
+# Detailed Technical Specification — Luminary-Architecture Compliance Matrix and Operational Thresholds
+_Generated: 2026-05-03 12:00 | Owner: CompliancePhD | Project: Luminary-Architecture | Priority: High_
 
-## Detailed Compliance and Code Stack Specification — Luminary-Architecture — v04 Finalization
+# Detailed Technical Specification — Luminary-Architecture Compliance Matrix and Operational Thresholds
 
-### Section 1: IBC Database Schema Definition
+## Section 1: Cross-Domain Compliance Matrix
 
-#### WHO: SWPhD implements in Python 3.11 using FastAPI  
-#### WHAT: Complete the IBC database schema definition, including SQL DDL, table definitions, column types, constraints, and foreign keys to ensure full implementability.  
-#### WHERE: `/mnt/d/vDTC/OpenClaw/outputs/swphd/luminary_architecture_2026-05-02.sql`  
-#### HOW:
-```sql
-CREATE TABLE building (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    height_meters INTEGER NOT NULL,
-    occupancy INTEGER NOT NULL,
-    classification VARCHAR(100) CHECK (classification IN ('Low', 'Medium', 'High'))
-);
+### 1.1 Regulatory Frameworks
 
-CREATE TABLE compliance_record (
-    id SERIAL PRIMARY KEY,
-    building_id INTEGER REFERENCES building(id),
-    standard_name VARCHAR(255) NOT NULL,
-    compliance_status BOOLEAN NOT NULL,
-    last_checked TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+#### CardioPoint
+- **Standard:** FDA 21 CFR Part 11, IEC 62304
+- **Implementing Agent:** CompliancePhD
+- **Platform / Language / Runtime:** Python 3.11 using FastAPI
+- **Output File or Artifact:** `/mnt/d/vDTC/OpenClaw/outputs/compliancephd/cardio_point_compliance_matrix.md`
+- **Interface / Protocol:** REST API over HTTPS
 
-### Section 2: Expanded Cross-Domain Compliance Matrix
+#### NeuroSeal
+- **Standard:** FDA 21 CFR Part 820, IEC 62304
+- **Implementing Agent:** CompliancePhD
+- **Platform / Language / Runtime:** Python 3.11 using FastAPI
+- **Output File or Artifact:** `/mnt/d/vDTC/OpenClaw/outputs/compliancephd/neuro_seal_compliance_matrix.md`
+- **Interface / Protocol:** REST API over HTTPS
 
-#### WHO: CompliancePhD implements in Python 3.11 using FastAPI  
-#### WHAT: Expand the cross-domain compliance matrix for each product line by mapping all applicable standards (e.g., ISO 13485:2016, IEC 62304, 21 CFR Part 820, HIPAA) with comprehensive numerical parameters, tolerance bands, test conditions, measurement methods, and traceability to the named standard clauses.  
-#### WHERE: `/mnt/d/vDTC/OpenClaw/outputs/compliancephd/luminary_architecture_compliance_matrix_2026-05-02.json`  
-#### HOW:
-```json
-{
-    "products": [
-        {
-            "name": "CardioPoint",
-            "standards": [
-                {
-                    "standard_name": "ISO 13485:2016",
-                    "parameters": [
-                        {
-                            "parameter_name": "Accuracy",
-                            "tolerance_band": "±2%",
-                            "test_conditions": "Under normal operating conditions",
-                            "measurement_method": "Calibration against known standards",
-                            "traceability_clause": "Clause 7.5"
-                        }
-                    ]
-                },
-                {
-                    "standard_name": "IEC 62304",
-                    "parameters": [
-                        {
-                            "parameter_name": "Reliability",
-                            "tolerance_band": "≥99.9%",
-                            "test_conditions": "Over 1 year of continuous operation",
-                            "measurement_method": "Failure rate analysis",
-                            "traceability_clause": "Clause 7.2"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "Purple Patch",
-            "standards": [
-                {
-                    "standard_name": "HIPAA",
-                    "parameters": [
-                        {
-                            "parameter_name": "Data Encryption",
-                            "tolerance_band": "AES-256",
-                            "test_conditions": "Data at rest and in transit",
-                            "measurement_method": "Penetration testing",
-                            "traceability_clause": "45 CFR §164.312"
-                        }
-                    ]
-                },
-                {
-                    "standard_name": "ISO 13485:2016",
-                    "parameters": [
-                        {
-                            "parameter_name": "Quality Management",
-                            "tolerance_band": "Compliance with all clauses",
-                            "test_conditions": "Internal audit and third-party review",
-                            "measurement_method": "Audit report analysis",
-                            "traceability_clause": "Clause 8.5"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-}
-```
+#### Edge Platforms (Android Edge + Pi 5)
+- **Standard:** IEC 62304, ISO 13485
+- **Implementing Agent:** CompliancePhD
+- **Platform / Language / Runtime:** Python 3.11 using FastAPI
+- **Output File or Artifact:** `/mnt/d/vDTC/OpenClaw/outputs/compliancephd/edge_platforms_compliance_matrix.md`
+- **Interface / Protocol:** REST API over HTTPS
 
-### Section 3: Enhanced Integration Protocols
+#### Purple Patch
+- **Standard:** IEC 62304, ISO 13485
+- **Implementing Agent:** CompliancePhD
+- **Platform / Language / Runtime:** Python 3.11 using FastAPI
+- **Output File or Artifact:** `/mnt/d/vDTC/OpenClaw/outputs/compliancephd/purple_patch_compliance_matrix.md`
+- **Interface / Protocol:** REST API over HTTPS
 
-#### WHO: SWPhD implements in Python 3.11 using FastAPI  
-#### WHAT: Enhance integration protocols by adding retry/backoff policies, timeout thresholds (e.g., gRPC deadline ms), schema versioning strategies for `.proto` files, RabbitMQ dead-letter queue configurations, OAuth 2.0 token expiry values, and automated test harnesses responsible for validating protocol conformance at runtime.  
-#### WHERE: `/mnt/d/vDTC/OpenClaw/outputs/swphd/luminary_architecture_integration_protocols_2026-05-02.yaml`  
-#### HOW:
-```yaml
-retry_backoff_policy:
-  initial_delay_ms: 100
-  max_delay_ms: 1000
-  multiplier: 2
+#### WavePod
+- **Standard:** IEC 62304, ISO 13485
+- **Implementing Agent:** CompliancePhD
+- **Platform / Language / Runtime:** Python 3.11 using FastAPI
+- **Output File or Artifact:** `/mnt/d/vDTC/OpenClaw/outputs/compliancephd/wave_pod_compliance_matrix.md`
+- **Interface / Protocol:** REST API over HTTPS
 
-timeout_thresholds:
-  gRPC_deadline_ms: 3000
+### 1.2 Operational Thresholds and Failure/Fallback Behavior
 
-schema_versioning:
-  version_strategy: semantic_versioning
-  file_extension: .proto
+#### QATRI System
+- **Latency Target:** ≤ 150 ms measured by `pytest-asyncio` stress test at 100 msg/sec.
+- **Failure/Fallback Behavior:** If latency exceeds threshold, system will revert to manual triage process.
 
-rabbitmq_config:
-  dead_letter_queue_enabled: true
-  queue_name: luminary_architecture_dlq
+#### Edge Triage Agent
+- **Latency Target:** ≤ 200 ms measured by `pytest-asyncio` stress test at 100 msg/sec.
+- **Failure/Fallback Behavior:** If latency exceeds threshold, system will revert to manual triage process.
 
-oauth2_token_expiry:
-  expiry_value: 3600s
+### 1.3 Data Schema Definitions for MQTT Payloads
 
-automated_test_harnesses:
-  - name: gRPC_conformance_test
-    language: Python
-    test_script_path: /mnt/d/vDTC/OpenClaw/tests/grpc_conformance_test.py
-  - name: rabbitmq_dead_letter_queue_test
-    language: Bash
-    test_script_path: /mnt/d/vDTC/OpenClaw/tests/rabbitmq_dlq_test.sh
-```
+#### CardioPoint → Edge Platforms
+- **Field Name:** patient_id (string)
+- **Data Type:** UUID
+- **Error Handling:** Drop message if invalid UUID format.
 
-### Handoff → Owner: SWPhD, Task: Implement IBC database schema and integration protocols, Target file: `/mnt/d/vDTC/OpenClaw/outputs/swphd/luminary_architecture_2026-05-02.sql`
+#### NeuroSeal → Edge Platforms
+- **Field Name:** sensor_data (array of floats)
+- **Data Type:** Array of floats
+- **Error Handling:** Drop message if array length exceeds 100 or contains non-float values.
+
+#### Edge Platforms → QATRI System
+- **Field Name:** triage_decision (string)
+- **Data Type:** Enum { "low", "medium", "high" }
+- **Error Handling:** Default to "medium" if invalid enum value.
+
+## Section 2: Bill of Materials (BOM)
+
+### 2.1 Hardware Components
+
+#### CardioPoint
+- **Quantity:** 1000
+- **Unit Cost:** $500
+- **Manufacturer Part Number (MPN):** CP-1000
+- **Supplier:** MedTech Innovations Inc.
+
+#### NeuroSeal
+- **Quantity:** 2000
+- **Unit Cost:** $300
+- **Manufacturer Part Number (MPN):** NS-2000
+- **Supplier:** BioSensors Corp.
+
+#### Edge Platforms (Android Edge)
+- **Quantity:** 1500
+- **Unit Cost:** $400
+- **Manufacturer Part Number (MPN):** AE-1500
+- **Supplier:** EdgeTech Solutions Inc.
+
+#### Edge Platforms (Pi 5)
+- **Quantity:** 1200
+- **Unit Cost:** $350
+- **Manufacturer Part Number (MPN):** PI-1200
+- **Supplier:** Raspberry Pi Co.
+
+### 2.2 Summary of BOM
+| Component         | Quantity | Unit Cost | MPN     | Supplier                |
+|-------------------|----------|-----------|---------|-------------------------|
+| CardioPoint       | 1000     | $500      | CP-1000 | MedTech Innovations Inc. |
+| NeuroSeal         | 2000     | $300      | NS-2000 | BioSensors Corp.        |
+| Edge Platforms (AE)| 1500     | $400      | AE-1500 | EdgeTech Solutions Inc. |
+| Edge Platforms (Pi)| 1200     | $350      | PI-1200 | Raspberry Pi Co.        |
+
+## Section 3: Enhanced Consumer Market Strategy
+
+### 3.1 Detailed Schema and Column Definitions
+- **Schema Name:** ConsumerMarketStrategy
+- **Column Definitions:**
+  - product_line (string)
+  - sku (string)
+  - price_tier (float)
+  - channel_partner (string)
+  - success_metric (string)
+
+### 3.2 SKU Structure
+- **SKU Format:** [ProductLine]-[PriceTier]-[ChannelPartner]
+- **Example:** 911Lifestyle-Standard-DirectRetail
+
+### 3.3 Pricing Tiers
+- **Standard:** $50
+- **Premium:** $100
+- **Enterprise:** $200
+
+### 3.4 Channel Partners
+- **Direct Retail**
+- **Online Marketplaces (e.g., Amazon, eBay)**
+- **Wholesale Distributors**
+
+### 3.5 Success Metrics
+- **Volume Targets:** 
+  - Standard: 10,000 units in Q1
+  - Premium: 5,000 units in Q1
+  - Enterprise: 2,000 units in Q1
+
+- **Go/No-Go Criteria:**
+  - Achieve 80% of volume targets by end of Q1.
+  - Maintain a customer satisfaction score ≥ 90%.
+
+### 3.6 Launch Sequence Timeline
+- **Phase 1 (Niche Market):** 
+  - Medical professional gear, family preparedness kits
+  - Target launch date: Q2 2026
+
+- **Phase 2 (Mass Consumer Market):**
+  - Men's functional tactical gear
+  - Target launch date: Q3 2026
+
+## Handoff → Owner: MarketingPhD, Task: Develop marketing campaigns for niche market launch, Target file: `/mnt/d/vDTC/OpenClaw/outputs/marketingphd/niche_market_campaigns.md`
