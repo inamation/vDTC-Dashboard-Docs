@@ -40,6 +40,8 @@
   * [Investment Details](projects/911-ecosystem/investment.md)
 
 ## Medical & Clinical
+  * [Final Report Cardiopoint 2026 05 04 V03](projects/cardiopoint/FINAL_REPORT_cardiopoint_2026-05-04_v03.md)
+
   * [Final Report Cardiopoint 2026 05 04](projects/cardiopoint/FINAL_REPORT_cardiopoint_2026-05-04.md)
 
   * [Final Report Cardiopoint 2026 05 03 V04](projects/cardiopoint/FINAL_REPORT_cardiopoint_2026-05-03_v04.md)
@@ -99,6 +101,14 @@
   * [Investment Details](projects/purple-patch/investment.md)
 
 ## Infrastructure
+  * [Final Report Midlink Icc 2026 05 05 V02](projects/infrastructure/midlink-icc/FINAL_REPORT_midlink_icc_2026-05-05_v02.md)
+
+  * [Final Report Midlink Icc Tower 2026 05 05 V02](projects/infrastructure/midlink-icc/FINAL_REPORT_midlink_icc_tower_2026-05-05_v02.md)
+
+  * [Final Report Ironshield 2026 05 05 V02](projects/infrastructure/ironshield/FINAL_REPORT_ironshield_2026-05-05_v02.md)
+
+  * [Final Report Ironshield Smr 2026 05 05 V02](projects/infrastructure/ironshield/FINAL_REPORT_ironshield_smr_2026-05-05_v02.md)
+
   * [Final Report Midlink Icc Tower 2026 05 04 V04](projects/infrastructure/midlink-icc/FINAL_REPORT_midlink_icc_tower_2026-05-04_v04.md)
 
   * [Final Report Ironshield 2026 05 04 V04](projects/infrastructure/ironshield/FINAL_REPORT_ironshield_2026-05-04_v04.md)
