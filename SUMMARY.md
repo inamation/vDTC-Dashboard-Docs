@@ -44,6 +44,8 @@
   * [Investment Details](projects/911-ecosystem/investment.md)
 
 ## Medical & Clinical
+  * [Final Report Cardiopoint 2026 05 07 V02](projects/cardiopoint/FINAL_REPORT_cardiopoint_2026-05-07_v02.md)
+
   * [Final Report Neuroseal 2026 05 06 V02](projects/neuroseal/FINAL_REPORT_neuroseal_2026-05-06_v02.md)
 
   * [Final Report Cardiopoint 2026 05 06 V03](projects/cardiopoint/FINAL_REPORT_cardiopoint_2026-05-06_v03.md)
@@ -111,6 +113,8 @@
   * [Investment Details](projects/purple-patch/investment.md)
 
 ## Infrastructure
+  * [Final Report Midlink Icc Tower 2026 05 07 V03](projects/infrastructure/midlink-icc/FINAL_REPORT_midlink_icc_tower_2026-05-07_v03.md)
+
   * [Final Report Midlink Icc 2026 05 07 V03](projects/infrastructure/midlink-icc/FINAL_REPORT_midlink_icc_2026-05-07_v03.md)
 
   * [Final Report Axiom Quantum 2026 05 07 V02](projects/infrastructure/axiom-quantum/FINAL_REPORT_axiom_quantum_2026-05-07_v02.md)
