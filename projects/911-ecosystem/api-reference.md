@@ -1,6 +1,44 @@
 # API Reference
 
-Base URL: `http://{hub-ip}:9111`
+Base URL: `http://{hub-ip}:9112`
+
+---
+
+## Authentication
+
+### POST /api/admin/login
+Obtain a session token.
+```json
+{ "username": "admin", "password": "••••" }
+```
+Returns: `{ "ok": true, "token": "uuid4", "username": "admin" }`
+
+### POST /api/admin/logout
+Invalidate the current session. Requires `Authorization: Bearer {token}`.
+
+**Protected endpoints** — require `Authorization: Bearer {token}` header:
+- `POST /api/settings/feature`
+- `POST /api/settings/llm/{provider}`
+- `POST /api/demo/inject`
+- `POST /api/incident/{id}/transition`
+- `POST /api/incident/{id}/assign/{device_id}`
+
+Session tokens are UUID4, stored in `sessionStorage`, invalidated on logout.
+
+---
+
+## Audit Log (HIPAA §164.312(b))
+
+### GET /api/audit-log?limit=50
+Returns most recent API activity entries.
+```json
+{
+  "entries": [
+    { "ts": "2026-05-09T14:22:31Z", "method": "POST", "path": "/api/chat",
+      "status": 200, "ip": "10.0.0.15" }
+  ]
+}
+```
 
 ---
 
@@ -28,14 +66,59 @@ Returns full hub state including devices, vitals, EKG, chat, LLM stats, and syst
 ### GET /api/settings
 Returns all feature flags and LLM provider info.
 
-### POST /api/settings/feature
+### POST /api/settings/feature *(auth required)*
 Toggle a feature flag.
 ```json
 { "name": "vitals_llm", "enabled": false }
 ```
+Feature names: `vitals_llm` · `chat_llm` · `xray_llm` · `webrtc` · `yolo` · `warmup` · `ekg` · `mission_log` · `ng911_bridge` · `multi_incident` · `fhir_export` · `tls_mqtt` · `anthropic_llm`
 
-### POST /api/settings/llm/{provider}
+### POST /api/settings/llm/{provider} *(auth required)*
 Switch LLM provider. `provider` = `local` or `anthropic`.
+
+---
+
+## Incidents & PSAP
+
+### GET /api/incidents
+List all incidents (active and archived), enriched with normalized status/type/units.
+```json
+{
+  "incidents": [
+    { "id": "INC-2026-0042", "status": "ACTIVE", "type": "Cardiac Arrest",
+      "units": "Unit-edge91", "first_event": "2026-05-09T14:22:00Z", "event_count": 47 }
+  ]
+}
+```
+
+### GET /api/incident/{id}/timeline
+Return JSONL event log for a specific incident.
+
+### POST /api/incident/{id}/transition *(auth required)*
+Advance the incident state machine.
+```json
+{ "state": "transport" }
+```
+Valid states: `active` · `transport` · `closed`
+
+### POST /api/incident/{id}/assign/{device_id} *(auth required)*
+Merge a second device into an existing incident.
+
+### GET /api/incident/{id}/fhir
+Export incident vitals as a FHIR R4 Bundle (Observation resources, LOINC-coded).
+
+---
+
+## Demo & Testing
+
+### POST /api/demo/inject *(auth required)*
+Inject a simulated emergency scenario via MQTT — no Android device required.
+
+### POST /api/llm/analyze
+Direct LLM analysis with current vitals as context.
+```json
+{ "prompt": "Should we initiate cath lab activation?", "device_id": "edge911-device" }
+```
 
 ---
 

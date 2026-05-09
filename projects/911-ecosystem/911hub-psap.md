@@ -82,3 +82,30 @@ TRANSPORT / CLOSE → Mission timeline recorded to audit log
 | NG911 CAD systems | Roadmap | SIP / i3 XML |
 | EHR systems | Roadmap | FHIR R4 |
 | Motorola PremierOne CAD | Roadmap | REST API |
+
+---
+
+## PSAP Dispatch Console
+
+The **Incidents view** (`/incidents`) is a real-time dispatch board that gives telecommunicators a live view of all active incidents with AI triage, unit tracking, and one-click state transitions.
+
+### Incident States
+```
+PENDING ──► ACTIVE ──► TRANSPORT ──► CLOSED
+```
+
+### ESI Color Coding
+| ESI | Meaning | Color |
+|---|---|---|
+| 1 | Immediate — life threat | Red |
+| 2 | Emergent — high risk | Orange |
+| 3 | Urgent — stable vitals | Yellow |
+| 4 | Less urgent | Green |
+| 5 | Non-urgent | Blue |
+
+State transitions require a valid admin session token and POST to `/api/incident/{id}/transition`.
+
+Clicking an incident opens a detail drawer embedding `MissionTimeline` — the full JSONL event log with timestamps and vitals snapshots.
+
+### Admin Authentication
+Admin access uses UUID session tokens stored in `sessionStorage`. Token is sent as `Authorization: Bearer {token}` on all mutation endpoints. Sessions are cleared on logout or tab close.
